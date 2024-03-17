@@ -1,0 +1,71 @@
+
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	</head>
+	<title>Product Form</title>
+	
+	<style>
+		div{
+			
+			border:2px solid rgb(71, 97, 128);
+			background-color: aliceblue;
+			width: 300px;
+			margin : auto;
+			
+		}
+		table {
+			margin: auto;
+            
+		}
+        td{
+            padding: 10px;
+        }
+        input{
+            padding: 10px;
+        }
+        a{
+            margin: 50px;
+            padding: 20px;
+        }
+	</style>
+	
+	
+	
+</head>
+
+<body>
+	<div class="container">
+			<h1 style="text-align: center;">Product Form</h1>
+			<form  th:object="${prdObj}" th:action="@{/prdForm}" method="post">
+				<table>
+				<tr>
+					<td>Name</td>
+					<td><input type="text" th:field="*{name}"></td>
+				</tr>
+				<tr>
+					<td>price</td>
+					<td><input type="text" th:field="*{price}"></td>
+				</tr>
+				<tr>
+					<td>Quantity</td>
+					<td><input type="text" th:field="*{qty}"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input type="submit" class="btn btn-success"></td>
+				</tr>
+				</table>
+			</form>
+			<a href="/prds">Get All Products</a>
+			
+	</div>
+</body>
+
+</html>
