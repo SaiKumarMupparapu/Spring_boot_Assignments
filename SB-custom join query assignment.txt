@@ -1,0 +1,187 @@
+=================================================================================
+SREP - 1 : ENTITY CLASS
+
+=================================================================================
+
+@Entity
+public class Address {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long aid;	
+	
+	private String city;
+	private String state;
+	private String country;
+
+	public Long getAid() {
+		return aid;
+	}
+	public void setAid(Long aid) {
+		this.aid = aid;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	@Override
+	public String toString() {
+		return "Address [aid=" + aid + ", city=" + city + ", state=" + state + ", country=" + country + "]";
+	}
+	
+}
+=================================================================================
+
+@Entity
+public class EmployeeWithAdrs {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String name;
+	private Double salary;
+	@OneToOne
+	@JoinColumn(name = "aid")
+	private Address adrs;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Double salary) {
+		this.salary = salary;
+	}
+
+	public Address getAdrs() {
+		return adrs;
+	}
+
+	public void setAdrs(Address adrs) {
+		this.adrs = adrs;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", salary=" + salary + ", adrs=" + adrs + "]";
+	}
+
+}
+
+
+=================================================================================
+SREP - 2 :  REPOSITERY INTERFACE
+=================================================================================
+
+public interface EmpRepo extends JpaRepository<EmployeeWithAdrs, Long> {
+	@Query("select e , a from EmployeeWithAdrs e join Address a on e.id=a.aid")
+	List<Object[]>getEmpWithAddrs();
+ }
+=================================================================================
+
+public interface AddressRepo extends JpaRepository<Address, Long>{
+
+}
+
+=================================================================================
+SREP - 3 : SERVICE CLASS
+
+=================================================================================
+
+@Service
+public class EmpAdrsService {
+
+	private EmpRepo er;
+	private AddressRepo aRepo;
+
+	public EmpAdrsService(EmpRepo er, AddressRepo aRepo) {
+		this.er = er;
+		this.aRepo = aRepo;
+	}
+
+	public void saveEmpWithAdrs() {
+		Address adrs = new Address();
+
+		EmployeeWithAdrs emp = new EmployeeWithAdrs();
+		emp.setName("sai");
+		emp.setSalary(1234567.0);
+
+		adrs.setCity("khammam");
+		adrs.setState("Telangana");
+		adrs.setCountry("Bharath");
+		aRepo.save(adrs);
+		emp.setAdrs(adrs);
+		er.save(emp);
+		System.out.println("record saved");
+	}
+
+	public void getEmpAlongWithAddrs() {
+		List<Object[]> empWithAddrs = er.getEmpWithAddrs();
+		for (Object[] o : empWithAddrs) {
+			System.out.println(o[0] + "\t" + o[1]);
+		}
+	}
+
+}
+
+=================================================================================
+SREP - 4 : START CLASS
+
+=================================================================================
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		ConfigurableApplicationContext context = 
+				SpringApplication.run(Application.class, args);
+	
+		EmpAdrsService empAdrsService =
+				context.getBean(EmpAdrsService.class);
+	
+		empAdrsService.saveEmpWithAdrs();
+		empAdrsService.getEmpAlongWithAddrs();
+	}
+
+}
+
+=================================================================================
+SREP - 5 : PROPERTIES FILE
+
+=================================================================================
+spring.datasource.username=XXXX
+spring.datasource.password=XXXX
+spring.datasource.url=jdbc:mysql://localhost:3306/springJPA
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true

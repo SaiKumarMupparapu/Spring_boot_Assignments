@@ -1,0 +1,126 @@
+=================================================================================
+STEP - 1 : GENERATOR CLASS
+=================================================================================
+
+@SuppressWarnings("serial")
+public class CustimizedIdGenerator implements IdentifierGenerator {
+
+	private static final String prefix="C";
+	@Override
+	public Object generate(SharedSessionContractImplementor session, Object object) {
+
+		@SuppressWarnings("deprecation")
+		Long maxId = (Long)session
+		.createQuery("select max(cast(subString(c.id,2)as long)) from Customer c")
+		.uniqueResult();
+		
+		maxId=(maxId == null)?0L:maxId;
+		
+		String newId=prefix+(maxId+1);
+		
+		return newId;
+	}
+
+}
+=================================================================================
+STEP - 2 : ENTITY CLASS
+=================================================================================
+
+@Entity
+public class Customer {
+
+	@Id
+	@GenericGenerator(name = "cust_Id", strategy = "com.Examole.demo.CustomGenerator.CustimizedIdGenerator")
+	@GeneratedValue(generator = "cust_Id")
+	private String cid;
+
+	private String name;
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [cid=" + cid + ", name=" + name + "]";
+	}
+
+}
+
+=================================================================================
+STEP - 3 : REPO 
+=================================================================================
+
+public interface CustomerRepo extends JpaRepository<Customer,String> {
+
+}
+
+=================================================================================
+STEP - 4 : SERVICE CLASS
+=================================================================================
+
+@Service
+public class CustomerService {
+
+	private CustomerRepo cr;
+
+	public CustomerService(CustomerRepo cr) {
+		this.cr = cr;
+	}
+
+	public void saveCustomer(String name) {
+		Customer c = new Customer();
+		c.setName(name);
+		cr.save(c);
+	}
+
+	public void getAllCustomers() {
+		cr.findAll().forEach(System.out::println);
+
+	}
+
+}
+
+=================================================================================
+STEP - 5 : START CLASS
+=================================================================================
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		ConfigurableApplicationContext run = SpringApplication.run(Application.class, args);
+		CustomerService customerService = run.getBean(CustomerService.class);
+		customerService.saveCustomer("ram");
+
+		customerService.getAllCustomers();
+
+	}
+
+}
+
+=================================================================================
+STEP - 6 : PROPERTIES FILE
+=================================================================================
+
+spring.datasource.username=XXX
+spring.datasource.password=XXXXX
+spring.datasource.url=jdbc:mysql://localhost:3306/springJPA
+
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.show-sql=true
+
+

@@ -1,0 +1,12 @@
+
+6) Write SQL queries to create  PERSON_TBL & PASSPORT_TBL with one to one relationship.
+
+7) Write SQL queries to create EMPLOYEE_TBL & ADDRESS_TBL with One to Many Relationship.
+
+
+   create table person(pid int ,pname varchar,pgender);
+
+   create table passport(pasid int,pasNumb int,pid int references person(pid));
+
+7) => create table employee(id int , ename int );
+    create table address(aid int , city varchar, state varchar ,type varchar, eid int references employee(id));

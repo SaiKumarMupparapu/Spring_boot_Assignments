@@ -1,0 +1,122 @@
+=================================================================================
+STEP - 1 :ENTITY CLASS
+
+=================================================================================
+
+@Entity
+public class Emp {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	private String name;
+	private Double salary;
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Double getSalary() {
+		return salary;
+	}
+	public void setSalary(Double salary) {
+		this.salary = salary;
+	}
+	@Override
+	public String toString() {
+		return "Emp [id=" + id + ", name=" + name + ", salary=" + salary + "]";
+	}
+	
+	
+
+}
+
+
+=================================================================================
+STEP - 2 :REPOSITERY INTERFACE
+
+=================================================================================
+
+public interface EmpRepo extends JpaRepository<Emp, Integer> {
+
+	@Transactional
+	@Modifying
+	@Query(value = "insert into Emp(name,salary) values(:name,:salary)" )
+	void insert(String name,Double salary);
+	
+	@Query("select name,salary from Emp")
+	List<Object[]> EmpNameAndSalary();
+}
+
+
+=================================================================================
+STEP - 3 : SERVICE CLASS
+
+=================================================================================
+
+@Service
+public class EmpService {
+	private EmpRepo er;
+
+	public EmpService(EmpRepo er) {
+		this.er = er;
+	}
+
+	public void insertEmp() {
+		er.insert("vijay", 1245.00);
+	}
+
+	public void getEmp() {
+		List<Object[]> nameAndSalary = er.EmpNameAndSalary();
+		for (Object[] list : nameAndSalary) {
+			String name = (String) list[0];
+			Double salary = (Double) list[1];
+			System.out.println(name + "\t" + salary);
+		}
+	}
+
+}
+
+
+=================================================================================
+STEP - 4 :START CLASS
+
+=================================================================================
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		ConfigurableApplicationContext run =
+				SpringApplication.run(Application.class, args);
+		EmpService empSerObj = run.getBean(EmpService.class);
+		
+		empSerObj.insertEmp();
+		empSerObj.getEmp();
+	
+	}
+
+}
+
+
+=================================================================================
+STEP - 1 :PROPERTIES FILE
+
+=================================================================================
+
+spring.datasource.username=XXXX
+spring.datasource.password=XXXXX
+spring.datasource.url=jdbc:mysql://localhost:3306/springJPA
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+
+
