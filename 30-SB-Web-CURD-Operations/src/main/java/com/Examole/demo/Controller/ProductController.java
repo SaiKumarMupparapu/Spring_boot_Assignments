@@ -77,7 +77,7 @@ public class ProductController {
 	
 	@PostMapping("/prdUpdated")
 	public ModelAndView updated(@ModelAttribute Product p) {
-		Boolean saved = prdService.save(p);
+		 prdService.save(p);
 		ModelAndView mav= new ModelAndView();
 		mav.setViewName("redirect:/plist");
 		return mav;

@@ -14,8 +14,14 @@
 		    <input type="text" th:field="*{price}" />
 		    <label>Quantity:</label>
 		    <input type="text" th:field="*{qty}" />
-		    <button type="submit">Update</button>
+		    <button type="submit" onclick="alertMsg()">Update</button>
 		</form>
+		
+		<script>
+			function alertMsg(){
+				window.alert("record updated");
+			}
+		</script>
 
 		
 	</body>
