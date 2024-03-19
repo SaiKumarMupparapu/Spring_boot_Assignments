@@ -29,7 +29,6 @@ public class PrdController {
 	public ModelAndView saveProduct(Product pr) {
 		
 		boolean prdSaved = ps.savePrd(pr);
-		System.out.println(pr);
 		
 		ModelAndView mav1=new ModelAndView();
 		
@@ -44,7 +43,8 @@ public class PrdController {
 		}
 		
 		mav1.addObject("msg", text);
-		mav1.setViewName("prdForm1");
+		mav1.addObject("prdObj", new Product());
+		mav1.setViewName("prdForm");
 		return mav1;
 	}
 	

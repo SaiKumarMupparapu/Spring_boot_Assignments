@@ -44,6 +44,11 @@
 	<div class="container">
 			<h1 style="text-align: center;">Product Form</h1>
 			<form  th:object="${prdObj}" th:action="@{/prdForm}" method="post">
+				
+				<div>
+				<h1 th:text="${msg}"></h1>
+				</div>
+				
 				<table>
 				<tr>
 					<td>Name</td>
@@ -53,7 +58,7 @@
 					<td>price</td>
 					<td><input type="text" th:field="*{price}"></td>
 				</tr>
-				<tr>
+				<tr>	
 					<td>Quantity</td>
 					<td><input type="text" th:field="*{qty}"></td>
 				</tr>
