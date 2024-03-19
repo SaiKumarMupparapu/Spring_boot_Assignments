@@ -1,0 +1,22 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+		<div>
+			<b th:if="${msg}" th:text="${msg}"></b>
+		</div>
+		<form th:object="${product}" th:action="@{/prdUpdated}" method="post">
+		    <input type="hidden" th:field="*{pId}" />
+		    <label>Name:</label>
+		    <input type="text" th:field="*{name}" />
+		    <label>Price:</label>
+		    <input type="text" th:field="*{price}" />
+		    <label>Quantity:</label>
+		    <input type="text" th:field="*{qty}" />
+		    <button type="submit">Update</button>
+		</form>
+
+		
+	</body>
+</html>
